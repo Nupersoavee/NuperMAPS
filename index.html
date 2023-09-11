@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NuperMAPS</title>
+    <!-- Link to Leaflet CSS file -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <!-- Link to Leaflet JavaScript file -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- Link to Leaflet Control Geocoder CSS file -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder@1.13.0/dist/Control.Geocoder.css" />
+    <!-- Link to Leaflet Control Geocoder JavaScript file -->
+    <script src="https://unpkg.com/leaflet-control-geocoder@1.13.0/dist/Control.Geocoder.js"></script>
+    <!-- Link to Leaflet Locate CSS file -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.locatecontrol@0.74.0/dist/L.Control.Locate.min.css" />
+    <!-- Link to Leaflet Locate JavaScript file -->
+    <script src="https://unpkg.com/leaflet.locatecontrol@0.74.0/dist/L.Control.Locate.min.js"></script>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            height: 100.1vh; /* This will make the map fill most of the viewport height */
+        }
+
+        #search-container {
+            text-align: center;
+            padding: 10px;
+        }
+
+        #layer-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>=
+    </div>
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([51.505, -0.09], 13);
+
+        // Define the base layers
+        var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var esriLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        });
+
+        var Plain = L.tileLayer('https://tileserver.memomaps.de/tilegen/{z}/{x}/{y}.png', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        });
+
+
+
+        // Create a layer control
+        var baseLayers = {
+            "Normal Maps": osmLayer,
+            "World Imagery": esriLayer,
+            "Advanced Plane Map": Plain
+        };
+
+        L.control.layers(baseLayers).addTo(map);
+
+        // Add a circle overlay with a specific radius and color
+      
+        // Resize the map when the window is resized
+        window.addEventListener('resize', function () {
+            map.invalidateSize();
+        });
+
+        // Add a Locate control to the map
+        L.control.locate().addTo(map);
+
+        // Initialize the geocoder control and add it to the map
+        var geocoder = L.Control.geocoder({
+            defaultMarkGeocode: false,
+        }).on('markgeocode', function (e) {
+            map.setView(e.geocode.center, 15); // Set the map view to the geocoded location
+            L.marker(e.geocode.center).addTo(map).bindPopup(e.geocode.name).openPopup(); // Add a marker and popup
+        }).addTo(map);
+
+        // Search button click event handler
+        document.getElementById('search-button').addEventListener('click', function () {
+            var query = document.getElementById('search-input').value;
+            geocoder.geocode(query);
+        });
+
+        // Layer selection event handler
+        document.getElementById('layer-select').addEventListener('change', function () {
+            var selectedLayer = this.value;
+            if (selectedLayer === 'osm') {
+                map.removeLayer(esriLayer);
+                map.addLayer(osmLayer);
+            } else if (selectedLayer === 'esri') {
+                map.removeLayer(osmLayer);
+                map.addLayer(esriLayer);
+            }
+        });
+    </script>
+</body>
+</html>
