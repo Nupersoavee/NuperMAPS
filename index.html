@@ -45,6 +45,7 @@
     <div id="map"></div>=
     </div>
     <script>
+    
         // Initialize the map
         var map = L.map('map').setView([51.505, -0.09], 13);
 
@@ -107,6 +108,31 @@
                 map.addLayer(esriLayer);
             }
         });
+        
+                
+        
+	L.Control.Watermark = L.Control.extend({
+		onAdd(map) {
+			const img = L.DomUtil.create('img');
+
+			img.src = '../../images/logo.png';
+			img.style.width = '200px';
+
+			return img;
+		},
+
+		onRemove(map) {
+			// Nothing to do here
+		}
+	});
+
+	L.control.watermark = function (opts) {
+		return new L.Control.Watermark(opts);
+	};
+	
+	const watermarkControl = L.control.watermark({position: 'bottomleft'}).addTo(map);
+        
+        
     </script>
 </body>
 </html>
