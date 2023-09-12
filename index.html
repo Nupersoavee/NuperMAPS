@@ -62,6 +62,26 @@
             attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
         });
 
+
+
+        var baseLayers = {
+            "Normal Maps": osmLayer,
+            "World Imagery": esriLayer,
+            "Advanced Plane Map": Plain
+        };
+
+        L.control.layers(baseLayers).addTo(map);
+
+        // Add a circle overlay with a specific radius and color
+      
+        // Resize the map when the window is resized
+        window.addEventListener('resize', function () {
+            map.invalidateSize();
+        });
+
+        // Add a Locate control to the map
+        L.control.locate().addTo(map);
+
 	    	L.Control.Watermark = L.Control.extend({
 		onAdd(map) {
 			const img = L.DomUtil.create('img');
@@ -80,29 +100,7 @@
 	L.control.watermark = function (opts) {
 		return new L.Control.Watermark(opts);
 	};
-	
-	const watermarkControl = L.control.watermark({position: 'bottomleft'}).addTo(map);
-
-
-
-        // Create a layer control
-        var baseLayers = {
-            "Normal Maps": osmLayer,
-            "World Imagery": esriLayer,
-            "Advanced Plane Map": Plain
-        };
-
-        L.control.layers(baseLayers).addTo(map);
-
-        // Add a circle overlay with a specific radius and color
-      
-        // Resize the map when the window is resized
-        window.addEventListener('resize', function () {
-            map.invalidateSize();
-        });
-
-        // Add a Locate control to the map
-        L.control.locate().addTo(map);
+	 L.control.watermark({position: 'bottomleft'}).addTo(map);
 
         // Initialize the geocoder control and add it to the map
         var geocoder = L.Control.geocoder({
