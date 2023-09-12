@@ -62,6 +62,27 @@
             attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
         });
 
+	    	L.Control.Watermark = L.Control.extend({
+		onAdd(map) {
+			const img = L.DomUtil.create('img');
+
+			img.src = 'https://tr.rbxcdn.com/ed094ef60d7fe98e3fb43d66924c46e3/768/432/Image/Png';
+			img.style.width = '200px';
+
+			return img;
+		},
+
+		onRemove(map) {
+			// Nothing to do here
+		}
+	});
+
+	L.control.watermark = function (opts) {
+		return new L.Control.Watermark(opts);
+	};
+	
+	const watermarkControl = L.control.watermark({position: 'bottomleft'}).addTo(map);
+
 
 
         // Create a layer control
@@ -111,26 +132,7 @@
         
                 
         
-	L.Control.Watermark = L.Control.extend({
-		onAdd(map) {
-			const img = L.DomUtil.create('img');
 
-			img.src = '../../images/logo.png';
-			img.style.width = '200px';
-
-			return img;
-		},
-
-		onRemove(map) {
-			// Nothing to do here
-		}
-	});
-
-	L.control.watermark = function (opts) {
-		return new L.Control.Watermark(opts);
-	};
-	
-	const watermarkControl = L.control.watermark({position: 'bottomleft'}).addTo(map);
         
         
     </script>
